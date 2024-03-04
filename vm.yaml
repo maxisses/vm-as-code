@@ -1,0 +1,77 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: my-debian-siemens-ievd
+  namespace: md-siemens-ievds
+  finalizers:
+    - kubevirt.io/virtualMachineControllerFinalize
+  labels:
+    app: my-debian-siemens-ievd
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1beta1
+      kind: DataVolume
+      metadata:
+        creationTimestamp: null
+        name: my-debian-siemens-ievd
+      spec:
+        source:
+          pvc:
+            name: siemens-ievd-indos
+            namespace: md-siemens-ievds
+        storage:
+          resources:
+            requests:
+              storage: 25Gi
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: small
+        vm.kubevirt.io/os: rhel9
+        vm.kubevirt.io/workload: server
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: my-debian-siemens-ievd
+        kubevirt.io/size: small
+    spec:
+      architecture: amd64
+      domain:
+        cpu:
+          cores: 2
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: rootdisk
+          interfaces:
+            - macAddress: '02:4c:25:00:00:04'
+              masquerade: {}
+              model: virtio
+              name: default
+          networkInterfaceMultiqueue: true
+          rng: {}
+        features:
+          acpi: {}
+          smm:
+            enabled: true
+        firmware:
+          bootloader:
+            efi:
+              secureBoot: false
+        machine:
+          type: pc-q35-rhel9.2.0
+        memory:
+          guest: 4Gi
+        resources: {}
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - dataVolume:
+            name: my-debian-siemens-ievd
+          name: rootdisk
+
