@@ -1,77 +1,100 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: max-win10
+  name: max-windows10-fly
   namespace: md-siemens-ievds
+  labels:
+    app: max-windows10-fly
+    vm.kubevirt.io/template: windows10-desktop-medium
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: '1'
+    vm.kubevirt.io/template.version: v0.26.0
 spec:
   dataVolumeTemplates:
     - apiVersion: cdi.kubevirt.io/v1beta1
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: max-windows10
+        name: max-windows10-fly
       spec:
-        source:
-          http:
-            url: 'https://software.download.prss.microsoft.com/dbazure/Win10_22H2_English_x64v1.iso?t=21f134d1-4b1e-4834-a106-f0e3b1c92ab4&P1=1709717689&P2=601&P3=2&P4=V2i%2bybViWm2FsR%2fbQEncmdnguwhXqChxqa0qfF7vn7k9uylHcRHcbk6CXKQsb2H%2bGMDtj%2b2YSPg9rda6JFZdZCsNoHo%2fOUWFpI2G0RLE1IUPgAvVHo8%2f6KAwRo02reslS26f1MjZFwS0ExSU2jb8ZbCUZXX3W6ePnsFQl024ZFS6XSL78lDHuQ3OqY3Wq%2fsxB4%2fIe6I28E54r9HfNh%2byXwABhFObKrITqoNuoXsSWKpZkIQTTZi36RlHEOCmZ2Jih%2fZYaIEUZ%2bnbO76SYjhfn%2fDIhG1gznpfy1G%2bovFcPPWS52KapXLwMkMSEmQX%2fuVP%2f9OURQJEZadBuYxY8iTTQw%3d%3d'
+        sourceRef:
+          kind: DataSource
+          name: win10
+          namespace: openshift-virtualization-os-images
         storage:
           resources:
             requests:
-              storage: 7Gi
-  runStrategy: RerunOnFailure
+              storage: 60Gi
+  running: true
   template:
     metadata:
+      annotations:
+        vm.kubevirt.io/flavor: medium
+        vm.kubevirt.io/os: windows10
+        vm.kubevirt.io/workload: desktop
       creationTimestamp: null
+      labels:
+        kubevirt.io/domain: max-windows10-fly
+        kubevirt.io/size: medium
     spec:
       architecture: amd64
       domain:
+        clock:
+          timer:
+            hpet:
+              present: false
+            hyperv: {}
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+          utc: {}
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
         devices:
           disks:
-            - bootOrder: 1
-              cdrom:
+            - disk:
                 bus: sata
-              name: installcdrom
-            - bootOrder: 2
-              disk:
-                bus: virtio
               name: rootdisk
-            - cdrom:
-                bus: sata
-              name: virtiocontainerdisk
-            - cdrom:
-                bus: sata
-              name: sysprep
+          inputs:
+            - bus: usb
+              name: tablet
+              type: tablet
+          interfaces:
+            - macAddress: '02:06:b6:00:00:07'
+              masquerade: {}
+              model: e1000e
+              name: default
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            reenlightenment: {}
+            ipi: {}
+            synic: {}
+            synictimer:
+              direct: {}
+            spinlocks:
+              spinlocks: 8191
+            reset: {}
+            relaxed: {}
+            vpindex: {}
+            runtime: {}
+            tlbflush: {}
+            frequencies: {}
+            vapic: {}
         machine:
           type: pc-q35-rhel9.2.0
+        memory:
+          guest: 4Gi
         resources: {}
-      evictionStrategy: LiveMigrateIfPossible
+      networks:
+        - name: default
+          pod: {}
       terminationGracePeriodSeconds: 3600
       volumes:
         - dataVolume:
-            name: max-windows10
-          name: installcdrom
-        - containerDisk:
-            image: 'registry.redhat.io/container-native-virtualization/virtio-win-rhel9@sha256:0c536c7aba76eb9c1e75a8f2dc2bbfa017e90314d55b242599ea41f42ba4434f'
-          name: virtiocontainerdisk
-        - name: sysprep
-          sysprep:
-            configMap:
-              name: windows10-bios-autounattend
-        - dataVolume:
-            name: win10
+            name: max-windows10-fly
           name: rootdisk
----
-apiVersion: cdi.kubevirt.io/v1beta1
-kind: DataVolume
-metadata:
-  name: win10
-  namespace: md-siemens-ievds
-spec:
-  source:
-    blank: {}
-  storage:
-    resources:
-      requests:
-        storage: 20Gi
-
-

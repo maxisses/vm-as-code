@@ -15,10 +15,10 @@ spec:
         creationTimestamp: null
         name: max-debian-ievd
       spec:
-        source:
-          pvc:
-            name: siemens-ievd-indos
-            namespace: md-siemens-ievds
+        sourceRef:
+          kind: DataSource
+          name: siemens-ievd
+          namespace: openshift-virtualization-os-images
         storage:
           resources:
             requests:
