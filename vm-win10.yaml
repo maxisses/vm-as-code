@@ -18,14 +18,6 @@ spec:
           resources:
             requests:
               storage: 7Gi
-  instancetype:
-    kind: VirtualMachineClusterInstancetype
-    name: u1.large
-    revisionName: windows-bios-installer-q6p95-u1.large-7343791a-f940-4f09-a3d9-56b18a702468-1
-  preference:
-    kind: VirtualMachineClusterPreference
-    name: windows.10
-    revisionName: windows-bios-installer-q6p95-windows.10-b892f990-248e-45d1-839c-6538bfbc7f31-2
   runStrategy: RerunOnFailure
   template:
     metadata:
