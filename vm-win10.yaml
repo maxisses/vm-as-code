@@ -9,7 +9,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: max-win10
+        name: max-windows10
       spec:
         source:
           http:
@@ -56,7 +56,7 @@ spec:
       terminationGracePeriodSeconds: 3600
       volumes:
         - dataVolume:
-            name: max-windows-2019
+            name: max-windows10
           name: installcdrom
         - containerDisk:
             image: 'registry.redhat.io/container-native-virtualization/virtio-win-rhel9@sha256:0c536c7aba76eb9c1e75a8f2dc2bbfa017e90314d55b242599ea41f42ba4434f'
