@@ -1,7 +1,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: max-windows-2019
+  name: max-win10
   namespace: md-siemens-ievds
 spec:
   dataVolumeTemplates:
@@ -9,7 +9,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: max-windows-2019
+        name: max-win10
       spec:
         source:
           http:
