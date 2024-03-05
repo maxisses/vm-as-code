@@ -19,7 +19,7 @@ spec:
       spec:
         sourceRef:
           kind: DataSource
-          name: win2019-iso
+          name: windows-server-2019
           namespace: openshift-virtualization-os-images
         storage:
           resources:
