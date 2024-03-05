@@ -2,7 +2,7 @@ apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: max-windows10-fly
-  namespace: md-siemens-ievds
+  namespace: md-siemens-vms
   labels:
     app: max-windows10-fly
     vm.kubevirt.io/template: windows10-desktop-medium

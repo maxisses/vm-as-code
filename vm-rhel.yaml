@@ -2,7 +2,7 @@ apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: max-rhel9
-  namespace: md-siemens-ievds
+  namespace: md-siemens-vms
   labels:
     app: max-rhel9
     kubevirt.io/dynamic-credentials-support: 'true'
