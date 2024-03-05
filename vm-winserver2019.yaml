@@ -19,7 +19,7 @@ spec:
       spec:
         source:
           kind: PersistentVolumeClaim
-          name: windows-server-2019
+          name: windows2019-server
           namespace: openshift-virtualization-os-images
         storage:
           resources:
