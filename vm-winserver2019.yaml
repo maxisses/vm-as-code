@@ -17,8 +17,8 @@ spec:
         creationTimestamp: null
         name: max-windows2019-bee
       spec:
-        source:
-          kind: PersistentVolumeClaim
+        sourceRef:
+          kind: DataSource
           name: windows2019-server
           namespace: openshift-virtualization-os-images
         storage:
