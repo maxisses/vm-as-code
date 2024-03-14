@@ -17,10 +17,10 @@ spec:
         creationTimestamp: null
         name: max-win-98-se
       spec:
-        source:
-          pvc:
-            name: win-98-se
-            namespace: openshift-virtualization-os-images
+        sourceRef:
+          kind: DataSource
+          name: windows-98-se
+          namespace: openshift-virtualization-os-images
         storage:
           resources:
             requests:
