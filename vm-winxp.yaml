@@ -17,10 +17,10 @@ spec:
         creationTimestamp: null
         name: max-winxp
       spec:
-        source:
-          pvc:
-            name: winxp-sp3-x86
-            namespace: openshift-virtualization-os-images
+        sourceRef:
+          kind: DataSource
+          name: winxp-sp3
+          namespace: openshift-virtualization-os-images
         storage:
           resources:
             requests:
