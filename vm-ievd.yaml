@@ -2,7 +2,6 @@ apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: max-debian-ievd
-  namespace: md-siemens-vms
   finalizers:
     - kubevirt.io/virtualMachineControllerFinalize
   labels:
@@ -47,8 +46,7 @@ spec:
                 bus: virtio
               name: rootdisk
           interfaces:
-            - macAddress: '02:4c:25:00:00:04'
-              masquerade: {}
+            - masquerade: {}
               model: virtio
               name: default
           networkInterfaceMultiqueue: true
