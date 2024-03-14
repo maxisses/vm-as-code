@@ -1,10 +1,10 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: max-windows2019-bee
+  name: max-windows10-fly
   namespace: md-siemens-vms
   labels:
-    app: max-windows2019-bee
+    app: max-windows10-fly
     vm.kubevirt.io/template: windows10-desktop-medium
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: '1'
@@ -15,17 +15,17 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: max-windows2019-bee
+        name: max-windows10-fly
       spec:
-        sourceRef:
-          kind: DataSource
-          name: windows2019-server
-          namespace: openshift-virtualization-os-images
+        source:
+          pvc:
+            name: win-98-se
+            namespace: openshift-virtualization-os-images
         storage:
           resources:
             requests:
               storage: 60Gi
-  running: false
+  running: true
   template:
     metadata:
       annotations:
@@ -34,7 +34,7 @@ spec:
         vm.kubevirt.io/workload: desktop
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: max-windows2019-bee
+        kubevirt.io/domain: max-windows10-fly
         kubevirt.io/size: medium
     spec:
       architecture: amd64
@@ -63,7 +63,7 @@ spec:
               name: tablet
               type: tablet
           interfaces:
-            - macAddress: '02:08:b6:00:00:07'
+            - macAddress: '02:06:b6:00:00:07'
               masquerade: {}
               model: e1000e
               name: default
@@ -96,5 +96,5 @@ spec:
       terminationGracePeriodSeconds: 3600
       volumes:
         - dataVolume:
-            name: max-windows2019-bee
+            name: max-windows10-fly
           name: rootdisk

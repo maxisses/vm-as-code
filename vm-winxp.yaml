@@ -1,10 +1,10 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: max-windows-xp
+  name: max-winxp
   namespace: md-siemens-vms
   labels:
-    app: max-windows-xp
+    app: max-winxp
     vm.kubevirt.io/template: windows10-desktop-medium
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: '1'
@@ -15,12 +15,12 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: max-windows-xp
+        name: max-winxp
       spec:
-        sourceRef:
-          kind: DataSource
-          name: windows-xp-professional
-          namespace: md-siemens-vms
+        source:
+          pvc:
+            name: winxp-sp3-x86
+            namespace: openshift-virtualization-os-images
         storage:
           resources:
             requests:
@@ -34,7 +34,7 @@ spec:
         vm.kubevirt.io/workload: desktop
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: max-windows-xp
+        kubevirt.io/domain: max-winxp
         kubevirt.io/size: medium
     spec:
       architecture: amd64
@@ -63,7 +63,7 @@ spec:
               name: tablet
               type: tablet
           interfaces:
-            - macAddress: '02:03:b6:00:00:08'
+            - macAddress: '02:06:b6:00:00:07'
               masquerade: {}
               model: e1000e
               name: default
@@ -96,5 +96,5 @@ spec:
       terminationGracePeriodSeconds: 3600
       volumes:
         - dataVolume:
-            name: max-windows-xp
+            name: max-winxp
           name: rootdisk
