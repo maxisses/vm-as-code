@@ -63,7 +63,7 @@ spec:
               name: tablet
               type: tablet
           interfaces:
-            - macAddress: '02:06:b6:00:00:07'
+            - macAddress: '02:06:b6:b6:00:07'
               masquerade: {}
               model: e1000e
               name: default
