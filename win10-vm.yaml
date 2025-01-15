@@ -1,0 +1,100 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: max-windows10-fly
+  labels:
+    app: max-windows10-fly
+    app.kubernetes.io/instance: max-vms-gitops
+    vm.kubevirt.io/template: windows10-desktop-medium
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: '1'
+    vm.kubevirt.io/template.version: v0.26.0
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1beta1
+      kind: DataVolume
+      metadata:
+        creationTimestamp: null
+        name: max-windows10-fly
+      spec:
+        sourceRef:
+          kind: DataSource
+          name: win10-install-cd
+          namespace: openshift-virtualization-os-images
+        storage:
+          resources:
+            requests:
+              storage: 60Gi
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: medium
+        vm.kubevirt.io/os: windows10
+        vm.kubevirt.io/workload: desktop
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: max-windows10-fly
+        kubevirt.io/size: medium
+    spec:
+      architecture: amd64
+      domain:
+        clock:
+          timer:
+            hpet:
+              present: false
+            hyperv: {}
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+          utc: {}
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - disk:
+                bus: sata
+              name: rootdisk
+          inputs:
+            - bus: usb
+              name: tablet
+              type: tablet
+          interfaces:
+            - macAddress: '02:f5:ee:00:00:1a'
+              masquerade: {}
+              model: e1000e
+              name: default
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            reenlightenment: {}
+            ipi: {}
+            synic: {}
+            synictimer:
+              direct: {}
+            spinlocks:
+              spinlocks: 8191
+            reset: {}
+            relaxed: {}
+            vpindex: {}
+            runtime: {}
+            tlbflush: {}
+            frequencies: {}
+            vapic: {}
+        machine:
+          type: pc-q35-rhel9.2.0
+        memory:
+          guest: 4Gi
+        resources: {}
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 3600
+      volumes:
+        - dataVolume:
+            name: max-windows10-fly
+          name: rootdisk
