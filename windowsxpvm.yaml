@@ -9,7 +9,6 @@ metadata:
     vm.kubevirt.io/template.revision: '1'
     vm.kubevirt.io/template.version: v0.31.1
   name: winxp-from-max
-  namespace: md-siemens-vms
 spec:
   dataVolumeTemplates:
     - apiVersion: cdi.kubevirt.io/v1beta1
