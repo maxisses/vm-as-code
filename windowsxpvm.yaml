@@ -3,12 +3,12 @@ kind: VirtualMachine
 metadata:
   annotations:
   labels:
-    app: winxp-violet-goldfish-98
+    app: winxp-from-max
     vm.kubevirt.io/template: windows10-desktop-medium
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: '1'
     vm.kubevirt.io/template.version: v0.31.1
-  name: winxp-violet-goldfish-98
+  name: winxp-from-max
   namespace: md-siemens-vms
 spec:
   dataVolumeTemplates:
@@ -18,7 +18,7 @@ spec:
         annotations:
           cdi.kubevirt.io/storage.bind.immediate.requested: 'true'
         creationTimestamp: null
-        name: winxp-violet-goldfish-98
+        name: winxp-from-max
       spec:
         source:
           blank: {}
@@ -28,7 +28,7 @@ spec:
               storage: 60Gi
     - metadata:
         creationTimestamp: null
-        name: winxp-violet-goldfish-98-installation-cdrom
+        name: winxp-from-max-installation-cdrom
       spec:
         source:
           pvc:
@@ -47,7 +47,7 @@ spec:
         vm.kubevirt.io/workload: desktop
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: winxp-violet-goldfish-98
+        kubevirt.io/domain: winxp-from-max
         kubevirt.io/size: medium
     spec:
       architecture: amd64
@@ -122,11 +122,11 @@ spec:
       terminationGracePeriodSeconds: 3600
       volumes:
         - dataVolume:
-            name: winxp-violet-goldfish-98
+            name: winxp-from-max
           name: rootdisk
         - containerDisk:
             image: 'registry.redhat.io/container-native-virtualization/virtio-win-rhel9@sha256:ad14f311b4a0f3e10c514f4242da39f9a14dc1ba8e99d5b996ea61d055538c39'
           name: windows-drivers-disk
         - dataVolume:
-            name: winxp-violet-goldfish-98-installation-cdrom
+            name: winxp-from-max-installation-cdrom
           name: installation-cdrom
