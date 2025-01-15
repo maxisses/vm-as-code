@@ -89,7 +89,7 @@ spec:
               model: e1000e
               name: default
         features:
-          acpi: {}
+        #  acpi: {}
           apic: {}
           hyperv:
             frequencies: {}
