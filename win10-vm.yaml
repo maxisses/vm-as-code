@@ -1,30 +1,42 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: max-windows10-fly
   labels:
-    app: max-windows10-fly
-    app.kubernetes.io/instance: max-vms-gitops
+    app: win10-max-gitops
     vm.kubevirt.io/template: windows10-desktop-medium
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: '1'
-    vm.kubevirt.io/template.version: v0.26.0
+    vm.kubevirt.io/template.version: v0.31.1
+  name: win10-max-gitops
+  namespace: md-vms-gitops
 spec:
   dataVolumeTemplates:
     - apiVersion: cdi.kubevirt.io/v1beta1
       kind: DataVolume
       metadata:
+        annotations:
+          cdi.kubevirt.io/storage.bind.immediate.requested: 'true'
         creationTimestamp: null
-        name: max-windows10-fly
+        name: win10-max-gitops
       spec:
-        sourceRef:
-          kind: DataSource
-          name: win10-install-cd
-          namespace: openshift-virtualization-os-images
+        source:
+          blank: {}
         storage:
           resources:
             requests:
               storage: 60Gi
+    - metadata:
+        creationTimestamp: null
+        name: win10-max-gitops-installation-cdrom
+      spec:
+        source:
+          pvc:
+            name: win10-install-iso
+            namespace: openshift-virtualization-os-images
+        storage:
+          resources:
+            requests:
+              storage: '16106127360'
   running: true
   template:
     metadata:
@@ -34,7 +46,7 @@ spec:
         vm.kubevirt.io/workload: desktop
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: max-windows10-fly
+        kubevirt.io/domain: win10-max-gitops
         kubevirt.io/size: medium
     spec:
       architecture: amd64
@@ -51,19 +63,28 @@ spec:
           utc: {}
         cpu:
           cores: 1
-          sockets: 1
+          sockets: 2
           threads: 1
         devices:
           disks:
-            - disk:
+            - bootOrder: 2
+              disk:
                 bus: sata
               name: rootdisk
+            - bootOrder: 3
+              cdrom:
+                bus: sata
+              name: windows-drivers-disk
+            - bootOrder: 1
+              cdrom:
+                bus: sata
+              name: installation-cdrom
           inputs:
             - bus: usb
               name: tablet
               type: tablet
           interfaces:
-            - macAddress: '02:f5:ee:00:00:1a'
+            - macAddress: '02:f5:ee:00:00:33'
               masquerade: {}
               model: e1000e
               name: default
@@ -71,24 +92,29 @@ spec:
           acpi: {}
           apic: {}
           hyperv:
-            reenlightenment: {}
+            frequencies: {}
             ipi: {}
+            reenlightenment: {}
+            relaxed: {}
+            reset: {}
+            runtime: {}
+            spinlocks:
+              spinlocks: 8191
             synic: {}
             synictimer:
               direct: {}
-            spinlocks:
-              spinlocks: 8191
-            reset: {}
-            relaxed: {}
-            vpindex: {}
-            runtime: {}
             tlbflush: {}
-            frequencies: {}
             vapic: {}
+            vpindex: {}
+          smm: {}
+        firmware:
+          bootloader:
+            efi:
+              secureBoot: true
         machine:
-          type: pc-q35-rhel9.2.0
+          type: pc-q35-rhel9.4.0
         memory:
-          guest: 4Gi
+          guest: 8Gi
         resources: {}
       networks:
         - name: default
@@ -96,5 +122,11 @@ spec:
       terminationGracePeriodSeconds: 3600
       volumes:
         - dataVolume:
-            name: max-windows10-fly
+            name: win10-max-gitops
           name: rootdisk
+        - containerDisk:
+            image: 'registry.redhat.io/container-native-virtualization/virtio-win-rhel9@sha256:ad14f311b4a0f3e10c514f4242da39f9a14dc1ba8e99d5b996ea61d055538c39'
+          name: windows-drivers-disk
+        - dataVolume:
+            name: win10-max-gitops-installation-cdrom
+          name: installation-cdrom
