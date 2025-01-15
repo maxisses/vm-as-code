@@ -1,0 +1,132 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  annotations:
+  labels:
+    app: winxp-violet-goldfish-98
+    vm.kubevirt.io/template: windows10-desktop-medium
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: '1'
+    vm.kubevirt.io/template.version: v0.31.1
+  name: winxp-violet-goldfish-98
+  namespace: md-siemens-vms
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1beta1
+      kind: DataVolume
+      metadata:
+        annotations:
+          cdi.kubevirt.io/storage.bind.immediate.requested: 'true'
+        creationTimestamp: null
+        name: winxp-violet-goldfish-98
+      spec:
+        source:
+          blank: {}
+        storage:
+          resources:
+            requests:
+              storage: 60Gi
+    - metadata:
+        creationTimestamp: null
+        name: winxp-violet-goldfish-98-installation-cdrom
+      spec:
+        source:
+          pvc:
+            name: winxp-sp3
+            namespace: openshift-virtualization-os-images
+        storage:
+          resources:
+            requests:
+              storage: '21474836480'
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: medium
+        vm.kubevirt.io/os: windows10
+        vm.kubevirt.io/workload: desktop
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: winxp-violet-goldfish-98
+        kubevirt.io/size: medium
+    spec:
+      architecture: amd64
+      domain:
+        clock:
+          timer:
+            hpet:
+              present: false
+            hyperv: {}
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+          utc: {}
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - bootOrder: 2
+              disk:
+                bus: sata
+              name: rootdisk
+            - bootOrder: 3
+              cdrom:
+                bus: sata
+              name: windows-drivers-disk
+            - bootOrder: 1
+              cdrom:
+                bus: sata
+              name: installation-cdrom
+          inputs:
+            - bus: usb
+              name: tablet
+              type: tablet
+          interfaces:
+            - masquerade: {}
+              model: e1000e
+              name: default
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            frequencies: {}
+            ipi: {}
+            reenlightenment: {}
+            relaxed: {}
+            reset: {}
+            runtime: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer:
+              direct: {}
+            tlbflush: {}
+            vapic: {}
+            vpindex: {}
+          smm:
+            enabled: true
+        firmware:
+          bootloader:
+            bios: {}
+        machine:
+          type: pc-q35-rhel9.4.0
+        memory:
+          guest: 4Gi
+        resources: {}
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 3600
+      volumes:
+        - dataVolume:
+            name: winxp-violet-goldfish-98
+          name: rootdisk
+        - containerDisk:
+            image: 'registry.redhat.io/container-native-virtualization/virtio-win-rhel9@sha256:ad14f311b4a0f3e10c514f4242da39f9a14dc1ba8e99d5b996ea61d055538c39'
+          name: windows-drivers-disk
+        - dataVolume:
+            name: winxp-violet-goldfish-98-installation-cdrom
+          name: installation-cdrom
